@@ -4,14 +4,17 @@ import ProjectList from './pages/ProjectList.jsx'
 import Overview from './pages/Overview.jsx'
 import Timeline, { MAX_COMPARE } from './pages/Timeline.jsx'
 import Compare from './pages/Compare.jsx'
+import MaterialMap from './pages/MaterialMap.jsx'
 
+// 依工作流程排列：先對照材料（寫入 LEBR_BlccId）→ 外掛計算上傳 → 看結果、比較
 const VIEWS = [
+  ['mapping', '材料對照'],
   ['overview', '評估總覽'],
   ['timeline', '快照時間軸'],
   ['compare', '方案比較'],
 ]
 
-// 單頁應用：左側案子清單，右側評估總覽／快照時間軸／方案比較（控制台計畫書第 6 節）。
+// 單頁應用：左側案子清單，右側材料對照／評估總覽／快照時間軸／方案比較（控制台計畫書第 6 節）。
 export default function App() {
   const [online, setOnline] = useState(null) // null = 檢查中
   const [projects, setProjects] = useState([])
@@ -40,11 +43,11 @@ export default function App() {
 
   useEffect(() => { refresh() }, [refresh])
 
-  // 換案子：清掉比較選取，回到總覽
+  // 換案子：清掉比較選取，回到總覽（材料對照不受案子影響，留在原頁）
   useEffect(() => {
     setSelected([])
     setCompare(null)
-    setView('overview')
+    setView((v) => (v === 'mapping' ? v : 'overview'))
   }, [projectId])
 
   // 載入快照清單，預設選最新一筆
@@ -107,9 +110,7 @@ export default function App() {
           <ProjectList projects={projects} selectedId={projectId} onSelect={setProjectId} />
           <main className="content">
             {error && <div className="banner banner-error">{error}</div>}
-            {online && projects.length === 0 ? (
-              <Empty />
-            ) : (
+            {online && (
               <>
                 <nav className="tabs" aria-label="檢視">
                   {VIEWS.map(([key, label]) => (
@@ -122,10 +123,14 @@ export default function App() {
                     </button>
                   ))}
                 </nav>
-                {view === 'overview' && (
+                {view === 'mapping' && (
+                  <MaterialMap projectTitle={projects.find((p) => p.id === projectId)?.title} />
+                )}
+                {view !== 'mapping' && projects.length === 0 && <Empty />}
+                {view === 'overview' && projects.length > 0 && (
                   <Overview snapshot={snapshot} snapshots={snapshots} snapshotId={snapshotId} onSelectSnapshot={setSnapshotId} />
                 )}
-                {view === 'timeline' && (
+                {view === 'timeline' && projects.length > 0 && (
                   <Timeline snapshots={snapshots} selected={selected} onToggle={toggle} onOpen={openSnapshot} onCompare={runCompare} />
                 )}
                 {view === 'compare' && <Compare data={compare} onBack={() => setView('timeline')} />}

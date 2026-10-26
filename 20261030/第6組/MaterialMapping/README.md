@@ -1,5 +1,9 @@
 # MaterialMapping — AI 材料辨識 + LEBR_BlccId 寫入工具
 
+> **2026-10-27 起已整合進控制台**：確認網頁改為 `console/` 的「材料對照」分頁，
+> 不再另外啟動（原本的 :8090 後端、:5180 前端已移除）。這個資料夾只留 AI agent 的
+> 操作說明（[AGENTS.md](AGENTS.md)）與辨識結果（`data/mapping.json`）。
+
 本工具是「Revit × AI 蘊含碳自動計算助手」提案裡「AI辨識材料命名」那塊的實作，
 搭配組員 [LebrCarbon](../LebrCarbon/) 外掛使用，不修改、不重複其計算核心。
 
@@ -22,17 +26,17 @@ AI Agent（Claude Code + Revit MCP，本機 node server）
         ▼
 Revit 模型（牆/窗類型的 LEBR_BlccId 共用參數）
         │
-        ├──→ MaterialMapping 網頁（本工具）：顯示辨識結果，下拉選單可改，即時重算小計
-        │      backend: Go, :8090 ｜ frontend: React, :5180
-        │      資料來源：backend/data/blcc.LEBR-2025.json（B-LCC官方資料庫副本）
-        │               backend/data/mapping.json（辨識結果存檔）
+        ├──→ 控制台「材料對照」分頁（console/，http://localhost:5173）：顯示辨識結果，下拉選單可改，即時重算小計
+        │      API：console/backend/handlers_mapping.go（/api/mapping、/api/blcc）
+        │      資料來源：LebrCarbon/src/LebrCarbon.Data/Resources/blcc.LEBR-2025.json（與外掛共用同一份）
+        │               MaterialMapping/data/mapping.json（辨識結果存檔，AI agent 直接改這個檔）
         │
         └──→ LebrCarbon 外掛（組員做的，完全沒改）：「從模型帶入」讀取同一個
                LEBR_BlccId 參數 → 官方手冊公式計算 → EEC/CFR/等級 → 組員的網頁控制台
 ```
 
-**兩個網站是分開的、各司其職**：MaterialMapping 管「材料對照確認」，
-組員的 `console/` 管「LEBR正式結果展示與方案比較」。
+**同一個網站、依流程排分頁**：「材料對照」確認材料 → 外掛計算並上傳 →
+「評估總覽／快照時間軸／方案比較」看正式 LEBR 結果。
 
 ## 完整工作流程（6 步，全部驗證過）
 
@@ -41,7 +45,7 @@ Revit 模型（牆/窗類型的 LEBR_BlccId 共用參數）
 | ① | 讀取模型牆/窗/門類型 | Revit MCP (`get_wall_types`、`query_elements`...) | ✅ |
 | ② | AI 辨識 → BlccId 草稿 | AI 依規則比對 B-LCC（規則見 [AGENTS.md](AGENTS.md)） | ✅ |
 | ③ | 讀取模型實際面積 | Revit MCP `query_elements_with_filter` 批次讀取（不要逐一查） | ✅ |
-| ④ | 網頁確認／修改 | MaterialMapping 前端，依種類分組、可收合 | ✅ |
+| ④ | 網頁確認／修改 | 控制台「材料對照」分頁，依種類分組、可收合 | ✅ |
 | ⑤ | 寫回 `LEBR_BlccId` 參數 | Revit MCP (`modify_element_parameter`，要先在 Revit 按過「綁定參數」) | ✅ |
 | ⑥ | 組員外掛「從模型帶入」→「計算」 | LebrCarbon（使用者在 Revit 操作） | ✅ 已用真實模型驗證抓得到、算得出 |
 
@@ -74,12 +78,16 @@ Revit 模型（牆/窗類型的 LEBR_BlccId 共用參數）
 ## 如何啟動
 
 ```powershell
+cd ..\console
 .\start.ps1
-# 瀏覽器開 http://localhost:5180，用「專案篩選」切換不同 Revit 檔案的資料
+# 瀏覽器開 http://localhost:5173 →「材料對照」分頁，用「Revit 專案」切換不同 Revit 檔案的資料
 ```
 
+AI agent 改了 `data/mapping.json` 之後不用重啟後端，網頁按「重新整理」或切換分頁就會讀到新內容。
+網頁上「材料試算合計」只算新建碳排 × 面積，不是正式 LEBR 評估。
+
 **`localhost` 是「這台電腦自己」的意思，不是共用網址。** 每個人要在自己電腦上跑 `start.ps1`，
-才會在自己的 `localhost:5180` 看到網頁；不是一人跑起來、大家都連得到同一個。
+才會在自己的 `localhost:5173` 看到網頁；不是一人跑起來、大家都連得到同一個。
 資料（`mapping.json`）也是存在各自電腦上，沒有自動同步——誰在哪台電腦上辨識/確認過的結果，
 只存在那台電腦，要分享給別人看就是把這個資料夾（含 `mapping.json`）一起傳過去，或是走 git commit。
 

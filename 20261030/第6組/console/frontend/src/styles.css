@@ -264,6 +264,26 @@ a.button:hover { background: var(--surface-2); }
   border: 1px solid var(--warn); color: var(--warn-ink); background: var(--surface); white-space: nowrap;
 }
 
+/* ── 材料對照 ── */
+.mapping-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 32px; }
+.mapping-summary > div { display: flex; align-items: baseline; gap: 8px; }
+.mapping-note { flex-basis: 100%; margin: 0; }
+.mapping-group { padding: 0; overflow: hidden; }
+.mapping-group-head {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  border: none; border-radius: 0; background: var(--surface-2); padding: 12px 18px; text-align: left;
+}
+.mapping-group .table-scroll { margin: 0; padding: 0 12px 8px; }
+.mapping-group select { max-width: 280px; }
+.area-input {
+  width: 96px; text-align: right; font: inherit; font-variant-numeric: tabular-nums; color: inherit;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px;
+}
+.status-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.78rem; white-space: nowrap; margin-right: 4px; border: 1px solid transparent; }
+.status-ok { background: var(--good-soft); color: var(--good-ink); border-color: var(--good); }
+.status-guess { background: var(--warn-soft); color: var(--warn-ink); border-color: var(--warn); }
+.status-approx { background: var(--surface-2); color: var(--ink-2); border-color: var(--axis); }
+
 /* ── 提示 ── */
 .notice { max-width: 640px; margin: 40px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
 .notice h2 { margin-bottom: 8px; }

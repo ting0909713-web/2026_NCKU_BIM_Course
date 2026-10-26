@@ -2,8 +2,8 @@
 // 後端位址：Vite proxy 下用相對路徑即可；直連後端時改這裡。
 export const API_BASE = ''
 
-async function get(path) {
-  const r = await fetch(`${API_BASE}${path}`)
+async function request(path, init) {
+  const r = await fetch(`${API_BASE}${path}`, init)
   if (!r.ok) {
     let msg = await r.text()
     try { msg = JSON.parse(msg).error ?? msg } catch { /* 不是 JSON 就用原文 */ }
@@ -11,6 +11,8 @@ async function get(path) {
   }
   return r.json()
 }
+
+const get = (path) => request(path)
 
 export async function health() {
   try {
@@ -27,3 +29,13 @@ export const getSnapshot = (id) => get(`/api/snapshots/${id}`)
 export const compareSnapshots = (ids) => get(`/api/compare?ids=${ids.join(',')}`)
 // Excel 計算書直接用連結下載，不經 fetch
 export const excelUrl = (id) => `${API_BASE}/api/snapshots/${id}/excel`
+
+// 材料對照（原 MaterialMapping 工具）
+export const getMapping = () => get('/api/mapping')
+export const getBlccOptions = (category) => get(`/api/blcc?category=${encodeURIComponent(category)}`)
+export const updateMapping = (elementId, project, patch) =>
+  request(`/api/mapping/${elementId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...patch, project }),
+  })

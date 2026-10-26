@@ -16,7 +16,8 @@ import (
 )
 
 type Server struct {
-	DB *sql.DB
+	DB      *sql.DB
+	Mapping *MappingStore // 材料對照；nil 時相關 API 回 503
 }
 
 func NewServer(db *sql.DB) *Server { return &Server{DB: db} }
@@ -31,6 +32,9 @@ func (s *Server) routes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/snapshots/{id}", s.handleGetSnapshot)
 	mux.HandleFunc("GET /api/snapshots/{id}/excel", s.handleDownloadExcel)
 	mux.HandleFunc("GET /api/compare", s.handleCompare)
+	mux.HandleFunc("GET /api/blcc", s.handleBlcc)
+	mux.HandleFunc("GET /api/mapping", s.handleMapping)
+	mux.HandleFunc("PATCH /api/mapping/{elementId}", s.handleMappingUpdate)
 }
 
 // errBadSnapshot 代表快照內容不合格（回 400），其他錯誤回 500。

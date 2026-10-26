@@ -4,7 +4,7 @@
 
 ## 這個工具是什麼
 
-AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳排資料庫（`backend/data/blcc.LEBR-2025.json`，121 筆），產生「這個類型該對應哪個 BlccId」的草稿，經人工在網頁上確認/修改後，寫回模型的 `LEBR_BlccId` 共用參數，供 [LebrCarbon 外掛](../LebrCarbon/)（組員寫的，不要動）讀取計算正式碳排。
+AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳排資料庫（與外掛共用：`../LebrCarbon/src/LebrCarbon.Data/Resources/blcc.LEBR-2025.json`，121 筆），產生「這個類型該對應哪個 BlccId」的草稿，經人工在網頁上確認/修改後，寫回模型的 `LEBR_BlccId` 共用參數，供 [LebrCarbon 外掛](../LebrCarbon/)（組員寫的，不要動）讀取計算正式碳排。
 
 ## 前置：怎麼接上 Revit MCP
 
@@ -26,7 +26,7 @@ AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳
 
 | 症狀 / 錯誤訊息 | 原因 | 解法 |
 |---|---|---|
-| `dotnet build -c Release.R{XX}` 說該 configuration 不存在 | csproj 的 `<Configurations>` 清單沒列出這個 Revit 版本（例如一開始只有 R24/R26，沒有 R27） | 手動把 `Release.R{XX}` 加進 `MCP\RevitMCP.csproj`（或 `20261016/sample/revit-plugin/RfiPlugin.csproj`）的 `<Configurations>`；Nice3point SDK 會自動依版號後兩碼找對應的 RevitAPI NuGet 套件，不用額外設定 |
+| `dotnet build -c Release.R{XX}` 說該 configuration 不存在 | csproj 的 `<Configurations>` 清單沒列出這個 Revit 版本（例如一開始只有 R24/R26，沒有 R27） | 手動把 `Release.R{XX}` 加進 `MCP\RevitMCP.csproj` 的 `<Configurations>`（`20261016/sample` 不在第 6 組交件範圍，在課程 repo 裡不要提交對它的修改）；Nice3point SDK 會自動依版號後兩碼找對應的 RevitAPI NuGet 套件，不用額外設定 |
 | `install-addon.ps1` 報錯說版本不支援（`[ValidateSet(...)]`） | 腳本的版本白名單沒收錄這個 Revit 年份 | 不要等腳本更新，直接手動把 `MCP\bin\Release.R{XX}\*` 全部檔案 + `.addin` 複製到 `%AppData%\Autodesk\Revit\Addins\{完整年份}\`（對應資料夾放 DLL，上一層放 `.addin`） |
 | Revit MCP 工具（`mcp__revit-mcp__*`）完全不在這個 session 的工具清單裡 | `.mcp.json` 是在 session **啟動時**讀取的，中途改檔案或只關分頁不會重新讀 | 改完 `.mcp.json` 後，**整個 Claude Desktop app 關掉重開**，或是 Fork 現有對話成新 session（Fork 會帶著對話記錄、但走全新進程，會重新讀 `.mcp.json`） |
 | 呼叫 Revit MCP 工具回傳空的 `Error:`、或逾時 | Revit 可能正卡在某個操作中間（彈窗沒關、指令還沒結束），或是短時間內連續發太多次呼叫 | 先確認 Revit 視窗沒有卡住的對話框、沒有還在進行中的指令；多次呼叫改成一次一個、不要同時並行發送（並行很容易逾時） |
@@ -41,8 +41,9 @@ AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳
 3. query_elements_with_filter(category=Walls, returnFields=["結構","面積","功能"...], maxCount=1000)
    一次批次讀取，不要逐一查詢369道牆這種事（會被Revit MCP連線擋，常常逾時）
 4. 依下面「判斷規則」給每個類型一個 BlccId 草稿
-5. 寫進 backend/data/mapping.json（記得加 project 欄位！見下方「多專案」）
-6. 重啟 backend (`go run .`)，開網頁讓使用者看過、改過
+5. 寫進 data/mapping.json（記得加 project 欄位！見下方「多專案」）
+6. 請使用者開控制台（`../console/start.ps1`，http://localhost:5173）的「材料對照」分頁看過、改過；
+   後端會在檔案修改後自動重讀，不用重啟
 7. 使用者確認後，用 modify_element_parameter 把 bodyId;finishId 寫進該類型的 LEBR_BlccId
    - 寫入前必須確認該 Revit 文件已經按過組員外掛的「綁定參數」，否則會報錯「找不到參數」
    - 寫入目標是「類型」的 ElementId，不是牆的實例 ID；窗/門也一樣，要先查「類型 ID」欄位
@@ -61,7 +62,7 @@ AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳
 
 ### 第二步：分類（牆本體 CW／外裝 OW／內牆 IW／窗 W）
 
-讀 `backend/data/blcc.LEBR-2025.json`，`category` 欄位：
+讀 `../LebrCarbon/src/LebrCarbon.Data/Resources/blcc.LEBR-2025.json`，`category` 欄位：
 - `cw`：牆本體（不透光帷幕及一般外牆），只有 6 種標準工法（RC現澆、金屬板/玻璃/石材/陶瓷鋼板帷幕、預鑄PC），**沒有傳統磚造選項**
 - `ow`：外牆外裝材（磁磚/乾式石材/塗料/金屬模板RC），6種
 - `iw`：內隔間，6種（磚牆雙面粉刷、輕質灌漿、矽酸鈣板輕隔間、RC隔間、清水空心磚、水泥粉刷空心磚）
@@ -81,7 +82,7 @@ AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳
 
 ## 多專案：project 欄位
 
-`mapping.json` 的每個項目都要有 `project` 欄位（填 `get_project_info` 回傳的 `ProjectName`）。**不同 Revit 檔案的 ElementId 可能剛好相同**（尤其是同一份範本帶出來的系統族類型，例如帷幕牆、預設磚牆類型），寫入/更新時一定要連 `project` 一起比對，backend 的 PATCH 已經這樣做了（看 `main.go` 的 `handleMappingUpdate`），新增程式碼時不要漏掉這個比對。
+`mapping.json` 的每個項目都要有 `project` 欄位（填 `get_project_info` 回傳的 `ProjectName`）。**不同 Revit 檔案的 ElementId 可能剛好相同**（尤其是同一份範本帶出來的系統族類型，例如帷幕牆、預設磚牆類型），寫入/更新時一定要連 `project` 一起比對，控制台後端的 PATCH 已經這樣做了（看 `../console/backend/handlers_mapping.go` 的 `handleMappingUpdate`），新增程式碼時不要漏掉這個比對。
 
 ## 不要做的事
 
