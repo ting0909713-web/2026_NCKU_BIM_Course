@@ -20,6 +20,32 @@ AI 透過 Revit MCP 讀取 Revit 模型的牆/窗類型，比對官方 B-LCC 碳
 6. **重開整個 Claude Desktop app（不是只關分頁）**，或是 Fork 現有對話 session，MCP 連線才會生效
 7. 用 `mcp__revit-mcp__get_project_info` 驗證連線，應該回傳目前 Revit 開啟的專案名稱
 
+## 另一套 MCP：rvt-mcp（2026-10-27 用 Revit 2026.5 + 專案1 實測通過）
+
+上面是課程教材 `shuotao/REVIT_MCP_study` 的接法。若你的 Claude Code 連的是 **rvt-mcp**（工具名稱是 `mcp__rvt-mcp__revit_*`），
+流程一樣，只是工具不同。實測結果：讀到的面積與外掛「從模型帶入」完全一致（外牆 436.08、隔間 82.43、窗 25.92 m²），
+寫入 `LEBR_BlccId` 後外掛讀得到，算出的 CFR 與控制台示範方案一致。
+
+| 步驟 | REVIT_MCP_study | rvt-mcp |
+|---|---|---|
+| 連線 | `get_project_info` | `revit_list_available_targets` → `revit_switch_target`（`version` 填年份，例如 `"2026"`） |
+| 確認參數已綁定 | — | `revit_list_project_parameter_bindings`（`nameFilter: "LEBR"`），`LEBR_BlccId` 應綁在牆、窗、門、樓板、帷幕板的**類型** |
+| 列出構件 | `get_wall_types`、`query_elements` | `revit_ai_element_filter`（`category: "牆"` / `"窗"` / `"門"`），回傳每個元件的 `elementId` 與 `typeName` |
+| 讀類型參數（功能、現有代碼） | `get_element_info` | `revit_get_type_parameters`（`elementIds` 給每種類型各一個實例即可），回傳 `typeId`、`功能`、`LEBR_BlccId` |
+| 讀面積、結構 | `query_elements_with_filter` | `revit_get_element_parameters`：取 `面積`（`HOST_AREA_COMPUTED`）與 `結構`（`WALL_STRUCTURAL_SIGNIFICANT`） |
+| 寫入代碼 | `modify_element_parameter` | `revit_set_type_parameter_values`（`typeIds`、`parameterName: "LEBR_BlccId"`、`value: "CW-0;OW-1"`），回應有 `oldValue` / `newValue` |
+
+rvt-mcp 實測踩到的坑：
+
+- **品類要用中文名稱**：中文版 Revit 傳 `"Walls"` 會回「Category 'Walls' not found」，要傳 `"牆"`、`"窗"`、`"門"`。
+- **面積不要用 `revit_compute_element_area`**：它算的是元件「所有面」的總面積（兩側加端面），不是 LEBR 用的單面面積。
+  用 `revit_get_element_parameters` 的 `面積`；`rawValue` 是平方英尺，乘 0.09290304 換成 m²（`displayValue` 已是 m²，但有四捨五入）。
+- **「結構」要看實例參數**：類型參數裡的 `結構` 是空的，要用 `revit_get_element_parameters` 讀實例的 `結構`（是／否）。
+- **一次讀太多元件會超出輸出上限**：每個元件約 40 個參數，十幾道牆就會被存成檔案。依類型分批讀，或把存下的檔案用程式解析加總，不要逐一手抄。
+- **寫入後用 `revit_get_type_parameters` 讀回確認**，不要只看寫入時的回應。
+- **外掛按「計算」會自動存檔**到模型旁的 `{模型名}.lebr.json`。測試時若暫時改了代碼，記得改回後再「從模型帶入 → 計算」一次，評估檔才會復原。
+- 窗的 `玻璃_材料`、`外框_材料` 常是 `<依品類>`，讀不出規格，只能看類型名稱判斷（與下方「判斷規則」第 5 點相同）。
+
 ## 常見卡關（今天實際踩過的坑）
 
 接 Revit MCP 這段，步驟寫出來不等於照做就會一次成功，下面是今天實際發生過、會重複出現的狀況：
