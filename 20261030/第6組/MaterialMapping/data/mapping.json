@@ -10,7 +10,7 @@
       "areaM2": 478.98,
       "confidence": "confirmed",
       "note": "與使用者確認：RC牆體+磁磚外裝",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1755,
@@ -21,7 +21,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "比照200mm處理，未逐一確認",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1739,
@@ -32,7 +32,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "與使用者確認：B-LCC無磚牆外牆本體選項，近似套用CW-1",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 30456,
@@ -43,7 +43,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "比照1739同工法處理",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1741,
@@ -54,7 +54,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "磚石牆，比照磚牆近似處理",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1742,
@@ -65,7 +65,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1759,
@@ -76,7 +76,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "假設作外牆用，RC預設，風險較高",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 9678,
@@ -87,7 +87,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "名稱含「上彩」，外裝改塗料(OW-3)",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 35350,
@@ -98,7 +98,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "已確認金屬立柱結構(350mm/460mm)",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 15514,
@@ -109,7 +109,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "玻璃帷幕，不需外裝層",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 15513,
@@ -120,7 +120,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 382,
@@ -131,7 +131,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1747,
@@ -142,7 +142,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "Revit帷幕牆系統",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1749,
@@ -153,7 +153,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1750,
@@ -164,7 +164,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1752,
@@ -175,7 +175,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1748,
@@ -186,7 +186,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1751,
@@ -197,7 +197,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1745,
@@ -208,7 +208,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "磚牆雙面粉刷基準，未指定實際粉刷方式",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1753,
@@ -219,7 +219,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1754,
@@ -230,7 +230,7 @@
       "areaM2": 0,
       "confidence": "guess",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1738,
@@ -241,7 +241,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "名稱「輕隔間」直接對應IW-3",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1744,
@@ -252,7 +252,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1746,
@@ -263,7 +263,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1757,
@@ -274,7 +274,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "基礎構件，不列入非主結構評估範疇",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 6844,
@@ -285,7 +285,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "同上",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 1758,
@@ -296,7 +296,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "基地工程，非外殼範疇",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 19014,
@@ -307,7 +307,7 @@
       "areaM2": 1.486,
       "confidence": "guess",
       "note": "未指定實際玻璃規格，套用基準鋁框+6mm玻璃；面積=6扇x0.406x0.610m 讀自模型",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 29795,
@@ -318,7 +318,7 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "與使用者確認：B-LCC無門的對應類別，排除（與磚牆無對應案例同一類限制）",
-      "project": "專案1"
+      "project": "專案1（同學）"
     },
     {
       "elementId": 642850,
@@ -792,6 +792,39 @@
       "areaM2": 0,
       "confidence": "confirmed",
       "note": "B-LCC資料庫無門的對應類別，排除（與專案1的門同一類限制）"
+    },
+    {
+      "elementId": 257482,
+      "project": "專案1",
+      "typeName": "LEBR測試 RC外牆15cm 貼磁磚",
+      "kind": "wall",
+      "bodyId": "CW-0",
+      "finishId": "OW-1",
+      "areaM2": 436.08,
+      "confidence": "confirmed",
+      "note": "rvt-mcp 讀取：12 道、功能=室外、結構=否；名稱直接對應 CW-0 傳統15cm RC外牆 + OW-1 RC外牆貼磁磚，與模型現有 LEBR_BlccId 一致"
+    },
+    {
+      "elementId": 257484,
+      "project": "專案1",
+      "typeName": "LEBR測試 輕隔間 138mm",
+      "kind": "interior",
+      "bodyId": "IW-3",
+      "finishId": null,
+      "areaM2": 82.43,
+      "confidence": "confirmed",
+      "note": "rvt-mcp 讀取：3 道、功能=室內、結構=否；名稱直接對應 IW-3 輕隔間牆（矽酸鈣板），與模型現有 LEBR_BlccId 一致"
+    },
+    {
+      "elementId": 257486,
+      "project": "專案1",
+      "typeName": "LEBR測試 120x180 鋁框5+5",
+      "kind": "window",
+      "bodyId": "W-11-AL",
+      "finishId": null,
+      "areaM2": 25.92,
+      "confidence": "confirmed",
+      "note": "rvt-mcp 讀取：12 扇 120×180cm；材質參數為<依品類>，依類型名稱對應 W-11-AL 崁入式鋁框＋5+5mm 雙強化膠合玻璃，與模型現有 LEBR_BlccId 一致"
     }
   ]
 }
